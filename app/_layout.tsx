@@ -1,4 +1,4 @@
-import { Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import './global.css';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "@expo-google-fonts/pacifico";
@@ -11,7 +11,6 @@ export default function RootLayout() {
     'Poppin': require('@/assets/fonts/Poppins-Regular.ttf'),
     'Poppins-Bold': require('@/assets/fonts/Poppins-Bold.ttf'),
     'Pacifico': require('@/assets/fonts/Pacifico.ttf'),
-
   })
 
   if (!fontLoaded) {

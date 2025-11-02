@@ -1,8 +1,9 @@
 export interface CustomButtonProps {
   onPress?: () => void;
   title?: string;
-  style?: string;
+  className?: string;
   leftIcon?: React.ReactNode;
-  textStyle?: string;
+  textClassName?: string;
   isLoading?: boolean;
+  disabled?: boolean;
 }
