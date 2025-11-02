@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Dimensions, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useFonts, Pacifico_400Regular } from '@expo-google-fonts/pacifico';
-import { Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '@/stores/appStore';
 
@@ -19,8 +17,6 @@ const Index = () => {
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const subtitleOpacity = useRef(new Animated.Value(0)).current;
 
-  useFonts({ Pacifico_400Regular });
-  useFonts({ Poppins_400Regular });
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
@@ -99,21 +95,20 @@ const Index = () => {
           end={{ x: 0.5, y: 1 }}
           style={styles.gradient}
         >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={styles.center}>
             <Animated.Image
               resizeMode="contain"
               source={require('@/assets/icon.png')}
               style={{
-                width: 200,
-                height: 200,
+                width: 120,
+                height: 120,
+                // backgroundColor: 'white',
                 transform: [{ translateY: imageTranslate }]
               }}
             />
             <Animated.Text
+              className={'font-Pacifico text-[55px] text-white '}
               style={{
-                fontSize: 45,
-                fontFamily: "Pacifico_400Regular",
-                color: "white",
                 transform: [{ translateY: titleTranslate }],
                 opacity: titleOpacity
               }}
@@ -121,9 +116,9 @@ const Index = () => {
               Turning Point
             </Animated.Text>
             <Animated.Text
+              className={'font-poppin'}
               style={{
-                fontFamily: 'Poppins_400Regular',
-                fontSize: 25,
+                fontSize: 22,
                 color: "white",
                 marginTop: 20,
                 letterSpacing: 4,

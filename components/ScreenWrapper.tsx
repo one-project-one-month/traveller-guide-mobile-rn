@@ -6,11 +6,17 @@ const { height } = Dimensions.get('window');
 type ScreenWrapperProps = {
   style?: ViewStyle;
   children: React.ReactNode;
+  isHeader?: boolean;
 };
 
 
-const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
-  let paddingTop = Platform.OS === 'ios' ? height * 0.05 : 50;
+const ScreenWrapper = ({ style, children, isHeader }: ScreenWrapperProps) => {
+  let paddingTop;
+  if (isHeader) {
+    paddingTop = Platform.OS === 'ios' ? height * 0.11 : 70;
+  } else {
+    paddingTop = Platform.OS === 'ios' ? height * 0.05 : 50;
+  }
   return (
     <View
       style={[
