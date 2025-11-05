@@ -4,8 +4,7 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import CheckBox from 'expo-checkbox'
 import CustomButton from '@/components/ui/Button'
 import { useRouter } from 'expo-router'
-import { useTermsAndConditionStore } from '../../stores/termsAndConditionStore'
-
+import { useTermsAndConditionStore } from '@/stores/termsAndConditionStore'
 
 const TermsAndConditions = () => {
   const router = useRouter();
