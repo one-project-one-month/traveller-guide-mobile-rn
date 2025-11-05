@@ -76,9 +76,13 @@ const Register = () => {
 
   return (
     <ScreenWrapper isHeader>
-      <ScrollView className='flex-1 px-10 '>
+      <ScrollView className='flex-1 px-10'>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-          <CenteredPopup visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
+          <CenteredPopup visible={isModalVisible} onClose={() => setIsModalVisible(false)} >
+            <Text className='text-[20px] font-poppinBold font-semibold'>Confirmation required</Text>
+            <Text className='mt-5 text-center font-poppin'>You must agree to the Terms and Conditions to continue</Text>
+            <CustomButton title='Got it' onPress={() => setIsModalVisible(false)} className='w-full mt-10 bg-orange-500 py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] text-white' />
+          </CenteredPopup>
           <Text className='font-Pacifico text-[34px] text-orange-500'>Register</Text>
           <Text className='font-poppin text-[14px] mt-1'>Sign up to explore guides, destinations, and local foods worldwide.</Text>
           <View className='flex gap-3 mt-10'>
