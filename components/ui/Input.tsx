@@ -30,7 +30,7 @@ const CustomInput = ({
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={"#888"}
-          className="flex-1 h-full ml-2 font-poppin"
+          className="flex-1 h-full ml-1 font-poppin"
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>

@@ -13,13 +13,14 @@ const TermsAndConditions = () => {
   return (
     <ScreenWrapper isHeader>
       <View className='flex justify-center items-center px-10 pb-10'>
-
-        <View className='w-full border-[0.5px] border-gray-200 rounded-xl shadow p-6'>
-          <Text className='text-[18px] font-poppin'>Hello, 👋</Text>
-          <Text className='text-[12px] font-poppin mt-2'>Before you create an account, please read and accept our Terms and Conditions.</Text>
-        </View>
-
         <ScrollView className='mt-1' showsVerticalScrollIndicator={false}>
+
+          <View className='w-full border-[0.5px] border-gray-200 rounded-xl p-6'>
+            <Text className='text-[18px] font-poppin'>Hello, 👋</Text>
+            <Text className='text-[12px] font-poppin mt-2'>Before you create an account, please read and accept our Terms and Conditions.</Text>
+          </View>
+
+
           <Text className='mt-5 self-start text-[23px] font-poppinBold font-semibold'>Terms and conditions</Text>
 
           <Text className='text-[12px] font-poppin mt-3'>
@@ -63,7 +64,7 @@ const TermsAndConditions = () => {
               <Text className='font-poppinBold font-semibold'>I agree with terms and conditions</Text>
             </View>
 
-            <CustomButton disabled={!agreeTerms} onPress={() => router.replace({ pathname: '/(auth)/register' })} title='Continue' className={`mt-5 py-[16px] rounded-[16px] mb-3 ${agreeTerms ? 'bg-orange-500' : 'bg-gray-300'}`} textClassName='font-poppinBold font-bold text-[18px] text-white' />
+            <CustomButton disabled={!agreeTerms} onPress={() => router.back()} title='Continue' className={`mt-5 py-[16px] rounded-[16px] mb-3 ${agreeTerms ? 'bg-orange-500' : 'bg-gray-300'}`} textClassName='font-poppinBold font-bold text-[18px] text-white' />
           </View>
         </ScrollView>
 

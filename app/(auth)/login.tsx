@@ -95,7 +95,7 @@ const Login = () => {
             Don&apos;t have an account?
           </Text>
           <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
-            <Text className='text-orange-500 font-bold'>Log in</Text>
+            <Text className='text-orange-500 font-bold'>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
