@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Keyboard, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, Text, Pressable, Keyboard, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import React, { useRef } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { Controller, useForm } from 'react-hook-form'
@@ -35,31 +35,36 @@ const ChangePassword = () => {
 
   return (
     <ScreenWrapper isHeader>
-      <Pressable onPress={Keyboard.dismiss} className='flex-1' accessible={false}>
-        <View className='flex justify-between items-center mx-10'>
-          <View className='items-center w-full'>
-            <Image contentFit='contain' source={require('@/assets/auth/createNewPassword.png')} style={{ width: maxImageWidth, height: 300 }} />
-            <Text className='font-poppin text-[16px] text-center mb-10'>Your new password must be different from previously used passwords.</Text>
-
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className='w-full gap-3'>
-              <Controller control={control} name="password" rules={{
-                required: 'Password is required.',
-                minLength: { value: 8, message: 'Password must be at least 8 characters long.' },
-                pattern: { value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, message: 'Password must contain one lowercase, one uppercase, and one number.' },
-              }} render={({ field: { onChange, value } }) => (
-                <CustomInput label='Create New Password' placeholder='Enter a secure password' secureTextEntry onChangeText={onChange} value={value} error={errors.password?.message} />
-              )} />
-              <Controller control={control} name="confirmPassword" rules={{
-                required: 'Please confirm your password.',
-                validate: value => value === passwordRef.current || 'The passwords do not match.'
-              }} render={({ field: { onChange, value } }) => (
-                <CustomInput label='Confirm New Password' placeholder='Confirm your secure password' secureTextEntry onChangeText={onChange} value={value} error={errors.confirmPassword?.message} />
-              )} />
-            </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 200 : 0}
+      >
+        <Pressable onPress={Keyboard.dismiss} className='flex' accessible={false}>
+          <View className='flex justify-center mx-10'>
+            <View className='items-center w-full'>
+              <Image contentFit='contain' source={require('@/assets/auth/newPassword.png')} style={{ width: maxImageWidth, height: 200, }} />
+              <Text className='font-poppin text-[16px] text-center mb-10'>Your new password must be different from previously used passwords.</Text>
+              <View className='gap-3'>
+                <Controller control={control} name="password" rules={{
+                  required: 'Password is required.',
+                  minLength: { value: 8, message: 'Password must be at least 8 characters long.' },
+                  pattern: { value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, message: 'Password must contain one lowercase, one uppercase, and one number.' },
+                }} render={({ field: { onChange, value } }) => (
+                  <CustomInput label='Create New Password' placeholder='Enter a secure password' secureTextEntry onChangeText={onChange} value={value} error={errors.password?.message} />
+                )} />
+                <Controller control={control} name="confirmPassword" rules={{
+                  required: 'Please confirm your password.',
+                  validate: value => value === passwordRef.current || 'The passwords do not match.'
+                }} render={({ field: { onChange, value } }) => (
+                  <CustomInput label='Confirm New Password' placeholder='Confirm your secure password' secureTextEntry onChangeText={onChange} value={value} error={errors.confirmPassword?.message} />
+                )} />
+              </View>
+            </View>
+            <CustomButton onPress={handleSubmit(onSubmit)} title='Reset Password' className='w-full bg-orange-500 py-[16px] rounded-[16px] mt-5' textClassName='font-poppinBold font-bold text-[18px] text-white' />
           </View>
-          <CustomButton onPress={handleSubmit(onSubmit)} title='Reset Password' className='w-full bg-orange-500 py-[16px] rounded-[16px] mt-10' textClassName='font-poppinBold font-bold text-[18px] text-white' />
-        </View>
-      </Pressable>
+        </Pressable>
+      </KeyboardAvoidingView>
     </ScreenWrapper>
   )
 }

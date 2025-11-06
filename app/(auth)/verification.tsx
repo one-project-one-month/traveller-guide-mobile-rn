@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, Keyboard, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, Pressable, Keyboard, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useRef, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { Image } from 'expo-image'
@@ -65,11 +65,12 @@ const Verification = () => {
 
   return (
     <ScreenWrapper isHeader >
-      <Pressable onPress={Keyboard.dismiss} className='flex-1' accessible={false}>
-        <View className='flex justify-center items-center mx-10'>
-          <View className='items-center'>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
+        <Pressable onPress={Keyboard.dismiss} className='flex-1' accessible={false}>
+          <View className='flex justify-center items-center mx-10'>
             <Image contentFit='contain' source={require('@/assets/auth/verification.png')} style={{ width: maxImageWidth, height: 300 }} />
-            <Text className='font-poppin text-[16px] text-center mb-10'>We have sent an OTP code to your email {maskEmail(email)}. Enter The OTP code below to verify.</Text>
+            <Text className='font-poppin text-[16px] text-center mb-5'>We have sent an OTP code to your email {maskEmail(email)}. Enter The OTP code below to verify.</Text>
 
             <View className='flex-row justify-center gap-4 mb-10'>
               {code.map((digit, index) => (
@@ -94,8 +95,6 @@ const Verification = () => {
                 />
               ))}
             </View>
-          </View>
-          <View className='w-full items-center mb-5'>
             <CustomButton onPress={onVerify} title='Verify' className='w-full bg-orange-500 py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] text-white' />
             <View className='flex-row gap-1 mt-5'>
               <Text className='font-poppinBold'>Did&apos;t receive the code?</Text>
@@ -106,8 +105,8 @@ const Verification = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </KeyboardAvoidingView>
     </ScreenWrapper >
   )
 }

@@ -27,12 +27,13 @@ const ForgotPassword = () => {
 
   return (
     <ScreenWrapper isHeader>
-      <Pressable onPress={Keyboard.dismiss} className='flex-1' accessible={false}>
-        <View className='flex justify-center items-center mx-10'>
-          <Image contentFit='contain' source={require('@/assets/auth/forgotPassword.png')} style={{ width: maxImageWidth, height: 300 }} />
-          <Text className='font-poppin text-[16px] text-center mb-10'>Please enter your email address to receive a verification code.</Text>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
+        <Pressable onPress={Keyboard.dismiss} className='flex-1' accessible={false}>
+          <View className='flex justify-center items-center mx-10'>
+            <Image contentFit='contain' source={require('@/assets/auth/forgotPassword.png')} style={{ width: maxImageWidth, height: 300 }} />
+            <Text className='font-poppin text-[16px] text-center mb-5'>Please enter your email address to receive a verification code.</Text>
 
-          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <Controller control={control} name="email" rules={{
               required: 'Email is required.',
               pattern: {
@@ -42,11 +43,11 @@ const ForgotPassword = () => {
             }} render={({ field: { onChange, value } }) => (
               <CustomInput label='Email' placeholder='example@gmail.com' keyboardType='email-address' onChangeText={onChange} value={value} error={errors.email?.message} />
             )} />
-          </KeyboardAvoidingView>
 
-          <CustomButton onPress={handleSubmit(onSubmit)} title='Send Code' className='w-full mt-10 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
-        </View>
-      </Pressable>
+            <CustomButton onPress={handleSubmit(onSubmit)} title='Send Code' className='w-full mt-5 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
+          </View>
+        </Pressable>
+      </KeyboardAvoidingView>
     </ScreenWrapper>
   )
 }
