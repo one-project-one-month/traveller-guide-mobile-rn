@@ -30,7 +30,7 @@ const OnBoarding = () => {
 
   const handleGetStarted = () => {
     setOnBoardingComplete(true);
-    router.push('/(auth)/welcome')
+    router.push('/(tabs)')
   };
 
   return (
