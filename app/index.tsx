@@ -25,7 +25,7 @@ const Index = () => {
   useEffect(() => {
     const timeOut = setTimeout(() => {
       if (onBoardingCompleted) {
-        router.replace('/(auth)/welcome');
+        router.replace('/(tabs)');
       } else {
         router.replace('/onboarding');
       }
