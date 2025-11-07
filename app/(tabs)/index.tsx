@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import ScreenWrapper from '@/components/ScreenWrapper'
+import Header from '@/components/homepage/Header'
 
 const Index = () => {
   return (
-    <View>
-      <Text>Index page</Text>
-    </View>
+    <ScreenWrapper>
+      <Header/>
+    </ScreenWrapper>
   )
 }
 
