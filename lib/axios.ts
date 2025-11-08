@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://turning-point-be.on.shiper.app/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

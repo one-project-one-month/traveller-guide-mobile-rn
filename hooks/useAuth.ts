@@ -36,6 +36,21 @@ export const useAuth = () => {
     },
   });
 
+  const googleLoginMutation = useMutation({
+    mutationFn: authService.loginWithGoogle,
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: (data) => {
+      login(data.user, data.token);
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    },
+    onError: (error) => {
+      console.error('Google login error:', error);
+      setLoading(false);
+    },
+  });
+
   const logoutMutation = useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
@@ -79,11 +94,13 @@ export const useAuth = () => {
     user,
     token,
     isAuthenticated,
-    isLoading: isLoading || loginMutation.isPending || registerMutation.isPending,
+    isLoading: isLoading || loginMutation.isPending || registerMutation.isPending || googleLoginMutation.isPending,
 
     // Mutations
     login: loginMutation.mutate,
     register: registerMutation.mutate,
+    loginWithGoogle: googleLoginMutation.mutate,
+    loginWithGoogleAsync: googleLoginMutation.mutateAsync,
     logout: logoutMutation.mutate,
     forgotPassword: forgotPasswordMutation.mutate,
     resetPassword: resetPasswordMutation.mutate,
@@ -92,6 +109,7 @@ export const useAuth = () => {
     // Mutation states
     loginError: loginMutation.error,
     registerError: registerMutation.error,
+    googleLoginError: googleLoginMutation.error,
     forgotPasswordError: forgotPasswordMutation.error,
     resetPasswordError: resetPasswordMutation.error,
     updateProfileError: updateProfileMutation.error,
@@ -99,6 +117,7 @@ export const useAuth = () => {
     loginSuccess: loginMutation.isSuccess,
     registerSuccess: registerMutation.isSuccess,
     forgotPasswordSuccess: forgotPasswordMutation.isSuccess,
+    googleLoginSuccess: googleLoginMutation.isSuccess,
     resetPasswordSuccess: resetPasswordMutation.isSuccess,
 
     // Profile query

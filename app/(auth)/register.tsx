@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { Ionicons } from '@expo/vector-icons';
@@ -10,25 +10,29 @@ import { useForm, Controller, FieldErrors } from 'react-hook-form';
 import CenteredPopup from '@/components/ui/Modal';
 import { useRouter } from 'expo-router';
 import { useTermsAndConditionStore } from '@/stores/termsAndConditionStore';
+import { useAuth } from '@/hooks/useAuth';
+import { useGoogleLogin } from '@/hooks/useGoogleLogin';
 
 interface RegisterFormType {
   email: string;
-  username: string;
+  name: string;
   password: string;
-  confirmPassword: string;
+  passwordConfirmation: string;
   agreeTerms: boolean;
 }
 
 const Register = () => {
   const router = useRouter();
   const { agreeTerms, setAgreeTerms } = useTermsAndConditionStore();
+  const { register, isLoading, registerError } = useAuth();
+  const { promptGoogleLogin, isGoogleLoginDisabled } = useGoogleLogin();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { control, handleSubmit, formState: { errors }, watch, setValue } = useForm<RegisterFormType>({
     defaultValues: {
       email: '',
-      username: '',
+      name: '',
       password: '',
-      confirmPassword: '',
+      passwordConfirmation: '',
       agreeTerms: agreeTerms,
     }
   });
@@ -60,11 +64,18 @@ const Register = () => {
 
 
   const onSubmit = (data: RegisterFormType) => {
-    router.push('/(auth)/account-created');
+    register(data, {
+      onSuccess: () => {
+        router.push('/(auth)/account-created');
+      },
+      onError: (error: any) => {
+        Alert.alert('Registration Failed', error.message || 'An error occurred. Please try again.');
+      }
+    });
   };
 
   const onError = (errors: FieldErrors<RegisterFormType>) => {
-    if (!errors.email && !errors.username && !errors.confirmPassword && !errors.password && errors.agreeTerms) {
+    if (!errors.email && !errors.name && !errors.passwordConfirmation && !errors.password && errors.agreeTerms) {
       setIsModalVisible(true);
     }
   };
@@ -72,6 +83,12 @@ const Register = () => {
   useEffect(() => {
     setValue('agreeTerms', agreeTerms, { shouldValidate: true });
   }, [agreeTerms, setValue]);
+
+  useEffect(() => {
+    if (registerError) {
+      Alert.alert('Registration Failed', (registerError as any).message || 'An error occurred. Please try again.');
+    }
+  }, [registerError]);
 
 
   return (
@@ -95,14 +112,14 @@ const Register = () => {
             }} render={({ field: { onChange, value } }) => (
               <CustomInput label='Email' placeholder='Enter email' keyboardType='email-address' onChangeText={onChange} value={value} error={errors.email?.message} />
             )} />
-            <Controller control={control} name="username" rules={{
+            <Controller control={control} name="name" rules={{
               required: 'Username is required.',
               minLength: {
                 value: 3,
                 message: 'Username must be at least 3 characters.'
               }
             }} render={({ field: { onChange, value } }) => (
-              <CustomInput label='Username' placeholder='Enter username' keyboardType='default' onChangeText={onChange} value={value} error={errors.username?.message} />
+              <CustomInput label='Username' placeholder='Enter username' keyboardType='default' onChangeText={onChange} value={value} error={errors.name?.message} />
             )} />
             <Controller control={control} name="password" rules={{
               required: 'Password is required.',
@@ -131,14 +148,14 @@ const Register = () => {
             )}
             <Controller
               control={control}
-              name="confirmPassword"
+              name="passwordConfirmation"
               rules={{
                 required: 'Please confirm your password.',
                 validate: value =>
                   value === passwordRef.current || 'The passwords do not match.'
               }}
               render={({ field: { onChange, value } }) => (
-                <CustomInput label='Confirm Password' placeholder='Confirm your password' keyboardType='default' secureTextEntry onChangeText={onChange} value={value} error={errors.confirmPassword?.message} />
+                <CustomInput label='Confirm Password' placeholder='Confirm your password' keyboardType='default' secureTextEntry onChangeText={onChange} value={value} error={errors.passwordConfirmation?.message} />
               )} />
             <Controller control={control} name="agreeTerms" rules={{
               validate: value => value === true || 'You must agree to the terms and conditions.'
@@ -167,7 +184,7 @@ const Register = () => {
 
         </KeyboardAvoidingView>
 
-        <CustomButton onPress={handleSubmit(onSubmit, onError)} title='Register' className='mt-10 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
+        <CustomButton onPress={handleSubmit(onSubmit, onError)} title={isLoading ? 'Registering...' : 'Register'} disabled={isLoading} className='mt-10 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 16 }}>
           <View style={{ flex: 1, height: 1, backgroundColor: '#D2D2D2' }} />
@@ -175,7 +192,7 @@ const Register = () => {
           <View style={{ flex: 1, height: 1, backgroundColor: '#D2D2D2' }} />
         </View>
 
-        <CustomButton title='Continue with Google' leftIcon={<Image source={require('@/assets/icons/google.png')} style={{ width: 20, height: 20, marginRight: 10 }} />} className='flex-row justify-center items-center border-orange-500 border-[1px] py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] ' />
+        <CustomButton onPress={() => promptGoogleLogin()} disabled={isGoogleLoginDisabled} title='Continue with Google' leftIcon={<Image source={require('@/assets/icons/google.png')} style={{ width: 20, height: 20, marginRight: 10 }} />} className='flex-row justify-center items-center border-orange-500 border-[1px] py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] ' />
 
         <View className='flex-row justify-center items-center mt-5 gap-1'>
           <Text>

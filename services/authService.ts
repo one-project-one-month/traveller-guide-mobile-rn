@@ -9,7 +9,7 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  passwordConfirmation: string;
 }
 
 export interface AuthResponse {
@@ -31,6 +31,11 @@ export const authService = {
 
   register: async (userData: RegisterRequest): Promise<AuthResponse> => {
     const response = await api.post('/auth/register', userData);
+    return response.data;
+  },
+
+  loginWithGoogle: async (token: string): Promise<AuthResponse> => {
+    const response = await api.post('/auth/google', { token });
     return response.data;
   },
 
