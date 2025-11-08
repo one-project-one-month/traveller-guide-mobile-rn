@@ -1,5 +1,5 @@
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import CustomInput from '@/components/ui/Input'
 import CheckBox from 'expo-checkbox';
@@ -7,6 +7,8 @@ import CustomButton from '@/components/ui/Button';
 import { Image } from 'expo-image';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
+import { useAuth } from '@/hooks/useAuth';
+import { useGoogleLogin } from '@/hooks/useGoogleLogin';
 
 interface LoginFormType {
   email: string;
@@ -16,6 +18,8 @@ interface LoginFormType {
 
 const Login = () => {
   const router = useRouter();
+  const { login, isLoading, loginError } = useAuth();
+  const { promptGoogleLogin, isGoogleLoginDisabled } = useGoogleLogin();
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormType>({
     defaultValues: {
       email: '',
@@ -25,7 +29,21 @@ const Login = () => {
   });
 
   const onSubmit = (data: LoginFormType) => {
+    login(data, {
+      onSuccess: () => {
+        router.push('/(tabs)');
+      },
+      onError: (error: any) => {
+        Alert.alert('Registration Failed', error.message || 'An error occurred. Please try again.');
+      }
+    });
   };
+
+  useEffect(() => {
+    if (loginError) {
+      Alert.alert('Registration Failed', (loginError as any).message || 'An error occurred. Please try again.');
+    }
+  }, [loginError]);
 
   return (
     <ScreenWrapper isHeader>
@@ -45,14 +63,14 @@ const Login = () => {
             )} />
             <Controller control={control} name="password" rules={{
               required: 'Password is required.',
-              minLength: {
-                value: 8,
-                message: 'Password must be at least 8 characters long.'
-              },
-              pattern: {
-                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-                message: 'Password must contain one lowercase, one uppercase, and one number.'
-              },
+              // minLength: {
+              //   value: 8,
+              //   message: 'Password must be at least 8 characters long.'
+              // },
+              // pattern: {
+              //   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+              //   message: 'Password must contain one lowercase, one uppercase, and one number.'
+              // },
             }} render={({ field: { onChange, value } }) => (
               <CustomInput label='Password' placeholder='Enter your password' keyboardType='default' secureTextEntry onChangeText={onChange} value={value} error={errors.password?.message} />
             )} />
@@ -80,7 +98,7 @@ const Login = () => {
 
         </KeyboardAvoidingView>
 
-        <CustomButton onPress={handleSubmit(onSubmit)} title='Log In' className='mt-10 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
+        <CustomButton onPress={handleSubmit(onSubmit)} title={isLoading ? 'Logging in...' : 'Log In'} className='mt-10 bg-orange-500 py-[16px] rounded-[16px] mb-2' textClassName='font-poppinBold font-bold text-[18px] text-white' />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 16 }}>
           <View style={{ flex: 1, height: 1, backgroundColor: '#D2D2D2' }} />
@@ -88,7 +106,7 @@ const Login = () => {
           <View style={{ flex: 1, height: 1, backgroundColor: '#D2D2D2' }} />
         </View>
 
-        <CustomButton title='Continue with Google' leftIcon={<Image source={require('@/assets/icons/google.png')} style={{ width: 20, height: 20, marginRight: 10 }} />} className='flex-row justify-center items-center border-orange-500 border-[1px] py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] ' />
+        <CustomButton onPress={() => promptGoogleLogin()} disabled={isGoogleLoginDisabled} title='Continue with Google' leftIcon={<Image source={require('@/assets/icons/google.png')} style={{ width: 20, height: 20, marginRight: 10 }} />} className='flex-row justify-center items-center border-orange-500 border-[1px] py-[16px] rounded-[16px]' textClassName='font-poppinBold font-bold text-[18px] ' />
 
         <View className='flex-row justify-center items-center mt-5 gap-1'>
           <Text>

@@ -3,10 +3,12 @@ import { StyleSheet, View, Dimensions, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '@/stores/appStore';
+import { useAuth } from '@/hooks/useAuth';
 
 
 const Index = () => {
   const onBoardingCompleted = useAppStore((state) => state.isOnboardingCompleted);
+  const { isAuthenticated, isLoading } = useAuth();
 
   const router = useRouter();
   const { width, height } = Dimensions.get('window');
@@ -19,15 +21,26 @@ const Index = () => {
 
 
   useEffect(() => {
+    if (isLoading) return;
+
     const timeOut = setTimeout(() => {
+<<<<<<< Updated upstream
       if (onBoardingCompleted) {
         router.replace('/(auth)/welcome');
+=======
+      if (isAuthenticated) {
+        router.replace('/(tabs)');
+>>>>>>> Stashed changes
       } else {
-        router.replace('/onboarding');
+        if (onBoardingCompleted) {
+          router.replace('/(auth)/welcome');
+        } else {
+          router.replace('/onboarding');
+        }
       }
     }, 3500);
     return () => clearTimeout(timeOut);
-  }, [onBoardingCompleted, router]);
+  }, [isAuthenticated, onBoardingCompleted, router, isLoading]);
 
   useEffect(() => {
     Animated.timing(animation, {
